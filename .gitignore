@@ -33,7 +33,11 @@ Makefile.in
 *.user
 *.cbp
 *~
+*.avi
+*.mp4
 opencvHSVtool/CMakeFiles
 Mat_vs_UMat_test/CMakeFiles
 opencvLoadParameters/CMakeFiles
+VideoRecorder/CMakeFiles
+CMakeFiles
 
