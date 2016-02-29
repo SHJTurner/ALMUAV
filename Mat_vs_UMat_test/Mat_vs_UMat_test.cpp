@@ -29,8 +29,17 @@ int main(int argc, char** argv )
 
     cv::VideoCapture cam;
 
+    if(argc == 2)
+    {
+        cam.open(atoi(argv[1]));
+    }
+    else
+    {
+        cam.open(0);
+    }
+
     ///Open cam and set resolution
-    cam.open(0);
+    //cam.open(0);
     if(!cam.isOpened())
     {
         printf("ERROR!: Failed to open camera stream\nIs there a camera connected?");
