@@ -29,6 +29,5 @@
 
 #Other
 *.user
-*.cpp~
-*.txt~
 *.cbp
+*~
