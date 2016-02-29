@@ -39,5 +39,10 @@ opencvHSVtool/CMakeFiles
 Mat_vs_UMat_test/CMakeFiles
 opencvLoadParameters/CMakeFiles
 VideoRecorder/CMakeFiles
+CMakeCache.txt
 CMakeFiles
+CMakeScripts
+Makefile
+cmake_install.cmake
+install_manifest.txt
 
