@@ -41,7 +41,7 @@ int main(int argc, char** argv )
     ///Open video out stream
     cv::VideoWriter VideoOut("videoOut.avi",1196444237,30,cv::Size(Image_Width,Image_Height));
     if (VideoOut.isOpened())
-        printf("Video out stream opened");
+        printf("Video out stream opened\n");
     else
     {
         printf("ERROR!:Failed to open video out stream!\n");
@@ -49,14 +49,27 @@ int main(int argc, char** argv )
     }
 
     cv::Mat image;
+    vector<cv::Mat> Mats;
     while(cv::waitKey(1) != 27)
     {
         cam.read(image);
-        VideoOut.write(image);
+
+        Mats.push_back(image.clone());
+
 #ifdef Display
         cv::imshow("Display Image",image);
 #endif
     }
+
+    //Write Video to disk
+    printf("Saving video\n");
+    for(cv::Mat iMat : Mats)
+    {
+        cv::imshow("Display Image",iMat);
+        cv::waitKey(1);
+        VideoOut.write(iMat);
+    }
     VideoOut.release();
+    printf("Video saved\n");
     return 0;
 }

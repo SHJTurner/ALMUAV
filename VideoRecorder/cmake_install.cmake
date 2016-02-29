@@ -1,4 +1,4 @@
-# Install script for directory: /home/turner/Workspaces/ALMUAV_TestCode/VideoRecorder_cplusplus
+# Install script for directory: /home/turner/Workspaces/ALMUAV_TestCode/VideoRecorder
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/turner/Workspaces/ALMUAV_TestCode/VideoRecorder_cplusplus/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/turner/Workspaces/ALMUAV_TestCode/VideoRecorder/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
