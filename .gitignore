@@ -33,3 +33,7 @@ Makefile.in
 *.user
 *.cbp
 *~
+opencvHSVtool/CMakeFiles
+Mat_vs_UMat_test/CMakeFiles
+opencvLoadParameters/CMakeFiles
+
