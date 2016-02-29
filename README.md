@@ -8,3 +8,6 @@ Tool for showing HSV color segmentated video stream from camera. Great for findi
 
 ##opencvLoadParameters
 Tool for loading camera calibration data, generated with ROS camera calibration tool.
+
+##VideoRecorder
+OpenCV video recording. Captures video from camera and writes it to a video file. Has both a python and c++ version. The c++ version is faster.
