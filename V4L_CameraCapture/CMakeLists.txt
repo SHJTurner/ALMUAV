@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project( V4L_CameraCapture )
+ADD_DEFINITIONS("-std=c++11")
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( V4L_CameraCapture V4L_CameraCapture.cpp )
+target_link_libraries( V4L_CameraCapture ${OpenCV_LIBS} )
