@@ -11,3 +11,6 @@ Tool for loading camera calibration data, generated with ROS camera calibration 
 
 ##VideoRecorder
 OpenCV video recording. Captures video from camera and writes it to a video file. Has both a python and c++ version. The c++ version is faster.
+
+##V4L_CameraCapture
+V4L program that captures from two USB cameras and messures FPS. (Usefull for stereo cameras)
