@@ -8,13 +8,13 @@ bool videofile = false;
 void on_trackbar( int, void* )
 {
 }
-
+const cv::Scalar black(0,0,0);
 
 int main(int argc, char** argv )
 {   
 
-    UMat image,image_HSV,image_inRange, image_inRange2, image_inRangeAdded;
-    int filter2Enabled = 0;
+    UMat image,image_HSV,image_inRange, image_inRange2, image_inRangeAdded,image_masked;
+    int filter2Enabled = 0, display_color = 0;
     int H_high = 255, H_low = 0, S_high = 255, S_low = 0, V_high = 255, V_low = 0;
     int H_high2 = 255, H_low2 = 0, S_high2 = 255, S_low2 = 0, V_high2 = 255, V_low2 = 0;
     VideoCapture cam;
@@ -56,7 +56,7 @@ int main(int argc, char** argv )
     namedWindow(filter1name,WINDOW_NORMAL);
     namedWindow(filter2name,WINDOW_NORMAL);
 
-
+    createTrackbar( "Colored output", filter1name, &display_color, 1, on_trackbar );
     createTrackbar( "Hue low", filter1name, &H_low, 180, on_trackbar );
     createTrackbar( "Hue high", filter1name, &H_high, 180, on_trackbar );
     createTrackbar( "Saturation low", filter1name, &S_low, 255, on_trackbar );
@@ -89,8 +89,17 @@ int main(int argc, char** argv )
                     cv::inRange(image_HSV,Scalar(H_low,S_low,V_low),Scalar(H_high,S_high,V_high),image_inRangeAdded);
                 }
 
+                if(display_color == 1)
+                {
+                        Mat(image.rows,image.cols,CV_8UC3, Scalar(0,0,0)).copyTo(image_masked);
+                        image.copyTo(image_masked,image_inRangeAdded);
+                        imshow(HSVName,image_masked);
+                }
+                else
+                        imshow(HSVName,image_inRangeAdded);
+                image.copyTo(image_masked,image_inRangeAdded);
                 imshow(OriginalName,image);
-                imshow(HSVName,image_inRangeAdded);
+
                 if(waitKey(1) == 27)
                 {
                     break;
@@ -120,8 +129,17 @@ int main(int argc, char** argv )
              {
                  cv::inRange(image_HSV,Scalar(H_low,S_low,V_low),Scalar(H_high,S_high,V_high),image_inRangeAdded);
              }
+             if(display_color == 1)
+             {
+                     Mat(image.rows,image.cols,CV_8UC3, Scalar(0,0,0)).copyTo(image_masked);
+                     image.copyTo(image_masked,image_inRangeAdded);
+                     imshow(HSVName,image_masked);
+             }
+             else
+                     imshow(HSVName,image_inRangeAdded);
+
+             image.copyTo(image_masked,image_inRangeAdded);
              imshow(OriginalName,image);
-             imshow(HSVName,image_inRangeAdded);
              if(waitKey(1) == 27)
              {
                  break;
