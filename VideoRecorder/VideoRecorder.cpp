@@ -1,3 +1,7 @@
+/// OpenCV Video Recorder
+/// Author: Stig Halfdan Juhl Turner
+/// E-mail: sttur14@student.sdu.dk
+
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include <ctime>
@@ -6,7 +10,7 @@ using namespace std;
 
 
 ///Show cam video
-#define Display
+//#define Display
 
 ///Defines
 #define Image_Width     1280
@@ -22,11 +26,11 @@ int main(int argc, char** argv )
 
 #ifdef Display
     printf("Display image: true\n");
-    cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );
+    //cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );
 #else
     printf("Display image: false (Uncomment \"#define Display\" in Mat_vs_UMat_test.cpp to enable)\n");
 #endif
-
+	cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );
     cv::VideoCapture cam;
     if ( argc != 2)
     {
