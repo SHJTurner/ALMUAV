@@ -13,8 +13,10 @@ void on_trackbar( int, void* )
 int main(int argc, char** argv )
 {   
 
-    UMat image,image_HSV,image_inRange;
+    UMat image,image_HSV,image_inRange, image_inRange2, image_inRangeAdded;
+    int filter2Enabled = 0;
     int H_high = 255, H_low = 0, S_high = 255, S_low = 0, V_high = 255, V_low = 0;
+    int H_high2 = 255, H_low2 = 0, S_high2 = 255, S_low2 = 0, V_high2 = 255, V_low2 = 0;
     VideoCapture cam;
 
     if ( argc != 2 && argc != 4 )
@@ -44,17 +46,31 @@ int main(int argc, char** argv )
     else
         printf("Device opened\n");
 
-    namedWindow("Display Original Video", WINDOW_NORMAL);
-    namedWindow("Display HSV Video",WINDOW_NORMAL);
-    namedWindow("HSV Controls",WINDOW_NORMAL);
+
+    std::string filter1name = "HSV Controls: Filter 1";
+    std::string filter2name = "HSV Controls: Filter 2";
+    std::string OriginalName = "Display Original";
+    std::string HSVName = "Display HSV";
+    namedWindow(OriginalName, WINDOW_NORMAL);
+    namedWindow(HSVName,WINDOW_NORMAL);
+    namedWindow(filter1name,WINDOW_NORMAL);
+    namedWindow(filter2name,WINDOW_NORMAL);
 
 
-    createTrackbar( "Hue low", "HSV Controls", &H_low, 180, on_trackbar );
-    createTrackbar( "Hue high", "HSV Controls", &H_high, 180, on_trackbar );
-    createTrackbar( "Saturation low", "HSV Controls", &S_low, 255, on_trackbar );
-    createTrackbar( "Saturation high", "HSV Controls", &S_high, 255, on_trackbar );
-    createTrackbar( "Value low", "HSV Controls", &V_low, 255, on_trackbar );
-    createTrackbar( "Value high", "HSV Controls", &V_high, 255, on_trackbar );
+    createTrackbar( "Hue low", filter1name, &H_low, 180, on_trackbar );
+    createTrackbar( "Hue high", filter1name, &H_high, 180, on_trackbar );
+    createTrackbar( "Saturation low", filter1name, &S_low, 255, on_trackbar );
+    createTrackbar( "Saturation high", filter1name, &S_high, 255, on_trackbar );
+    createTrackbar( "Value low", filter1name, &V_low, 255, on_trackbar );
+    createTrackbar( "Value high", filter1name, &V_high, 255, on_trackbar );
+
+    createTrackbar( "Enable Filter 2", filter2name, &filter2Enabled, 1, on_trackbar );
+    createTrackbar( "Hue low 2", filter2name, &H_low2, 180, on_trackbar );
+    createTrackbar( "Hue high 2", filter2name, &H_high2, 180, on_trackbar );
+    createTrackbar( "Saturation low 2", filter2name, &S_low2, 255, on_trackbar );
+    createTrackbar( "Saturation high 2", filter2name, &S_high2, 255, on_trackbar );
+    createTrackbar( "Value low 2", filter2name, &V_low2, 255, on_trackbar );
+    createTrackbar( "Value high 2", filter2name, &V_high2, 255, on_trackbar );
     if(videofile){
         printf("Press esc to exit (Video is looping)\n");
         while(true)
@@ -62,9 +78,19 @@ int main(int argc, char** argv )
             if(cam.read(image))
             {
                 cvtColor(image,image_HSV,cv::COLOR_RGB2HSV);
+                if(filter2Enabled == 1)
+                {
                 cv::inRange(image_HSV,Scalar(H_low,S_low,V_low),Scalar(H_high,S_high,V_high),image_inRange);
-                imshow("Display Original Video",image);
-                imshow("Display HSV Video",image_inRange);
+                cv::inRange(image_HSV,Scalar(H_low2,S_low2,V_low2),Scalar(H_high2,S_high2,V_high2),image_inRange2);
+                cv::addWeighted(image_inRange,1.0,image_inRange2,1.0,1.0,image_inRangeAdded);
+                }
+                else
+                {
+                    cv::inRange(image_HSV,Scalar(H_low,S_low,V_low),Scalar(H_high,S_high,V_high),image_inRangeAdded);
+                }
+
+                imshow(OriginalName,image);
+                imshow(HSVName,image_inRangeAdded);
                 if(waitKey(1) == 27)
                 {
                     break;
@@ -84,9 +110,18 @@ int main(int argc, char** argv )
         {
              cam.read(image);
              cvtColor(image,image_HSV,cv::COLOR_RGB2HSV);
+             if(filter2Enabled == 1)
+             {
              cv::inRange(image_HSV,Scalar(H_low,S_low,V_low),Scalar(H_high,S_high,V_high),image_inRange);
-             imshow("Display Original Video",image);
-             imshow("Display HSV Video",image_inRange);
+             cv::inRange(image_HSV,Scalar(H_low2,S_low2,V_low2),Scalar(H_high2,S_high2,V_high2),image_inRange2);
+             cv::addWeighted(image_inRange,1.0,image_inRange2,1.0,1.0,image_inRangeAdded);
+             }
+             else
+             {
+                 cv::inRange(image_HSV,Scalar(H_low,S_low,V_low),Scalar(H_high,S_high,V_high),image_inRangeAdded);
+             }
+             imshow(OriginalName,image);
+             imshow(HSVName,image_inRangeAdded);
              if(waitKey(1) == 27)
              {
                  break;
