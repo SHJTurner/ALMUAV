@@ -40,11 +40,11 @@ int main(int argc, char** argv )
 
     if(!cam.isOpened())
     {
-        printf("ERROR!: Failed to open video device\n");
+        printf("ERROR!: Failed to open video device or file\n");
         return -1;
     }
     else
-        printf("Device opened\n");
+        printf("Device or file opened\n");
 
 
     std::string filter1name = "HSV Controls: Filter 1";
