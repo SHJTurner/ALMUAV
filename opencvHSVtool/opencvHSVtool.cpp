@@ -13,7 +13,7 @@ const cv::Scalar black(0,0,0);
 int main(int argc, char** argv )
 {   
 
-    UMat image,image_HSV,image_inRange, image_inRange2, image_inRangeAdded,image_masked;
+    UMat image,image_old,image_HSV,image_inRange, image_inRange2, image_inRangeAdded,image_masked;
     int filter2Enabled = 0, display_color = 0;
     int H_high = 255, H_low = 0, S_high = 255, S_low = 0, V_high = 255, V_low = 0;
     int H_high2 = 255, H_low2 = 0, S_high2 = 255, S_low2 = 0, V_high2 = 255, V_low2 = 0;
@@ -71,12 +71,27 @@ int main(int argc, char** argv )
     createTrackbar( "Saturation high 2", filter2name, &S_high2, 255, on_trackbar );
     createTrackbar( "Value low 2", filter2name, &V_low2, 255, on_trackbar );
     createTrackbar( "Value high 2", filter2name, &V_high2, 255, on_trackbar );
+    bool pause = false;
+
     if(videofile){
         printf("Press esc to exit (Video is looping)\n");
         while(true)
         {
-            if(cam.read(image))
-            {
+                if(!pause)
+                {
+                    if(!cam.read(image))
+                    {
+                        cam = VideoCapture(argv[1]);
+                        cam.read(image);
+                        image_old = image;
+                    }
+                    else
+                        image_old = image;
+                }
+                else{
+                    image = image_old.clone();
+                }
+
                 cvtColor(image,image_HSV,cv::COLOR_RGB2HSV);
                 if(filter2Enabled == 1)
                 {
@@ -99,16 +114,15 @@ int main(int argc, char** argv )
                         imshow(HSVName,image_inRangeAdded);
                 image.copyTo(image_masked,image_inRangeAdded);
                 imshow(OriginalName,image);
-
-                if(waitKey(1) == 27)
+                int tmp =waitKey(5);
+                if(tmp == 27)
                 {
                     break;
                 }
-            }
-            else
-            {
-                cam = VideoCapture(argv[1]);
-            }
+                else if(tmp == 'p')
+                {
+                    pause = !pause;
+                }
         }
 
 

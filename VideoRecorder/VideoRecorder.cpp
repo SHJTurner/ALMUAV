@@ -10,11 +10,11 @@ using namespace std;
 
 
 ///Show cam video
-//#define Display
+#define Display
 
 ///Defines
-#define Image_Width     1280
-#define Image_Height    720
+#define Image_Width     800
+#define Image_Height    600
 
 #define ANSI_COLOR_RED  "\x1b[31m"
 #define ANSI_COLOR_YELLOW  "\x1b[33m"
@@ -55,7 +55,7 @@ int main(int argc, char** argv )
 
     cam.set(cv::CAP_PROP_FRAME_WIDTH,Image_Width);
     cam.set(cv::CAP_PROP_FRAME_HEIGHT,Image_Height);
-
+    cv::startWindowThread();
     cv::Mat image;
     vector<cv::Mat> Mats;
     printf("Recording... (Press esc to stop)\n");
@@ -96,7 +96,7 @@ int main(int argc, char** argv )
             string displayText = "Writing Frame: "+ to_string(Frame_number) + " / " + to_string(Mats.size());
             cv::putText(*it,displayText,cv::Point(80,80),cv::FONT_HERSHEY_SIMPLEX,2.2,cv::Scalar(0,255,0),3);
             cv::imshow("Display Image",*it);
-            cv::waitKey(1);
+            //cv::waitKey(1);
             showCounter = 0;
         }
     }
