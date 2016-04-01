@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project( red_led_detector )
+ADD_DEFINITIONS("-std=c++11")
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( red_led_detector_test_program main.cpp red_led_detector.cpp )
+target_link_libraries( red_led_detector_test_program ${OpenCV_LIBS} )
