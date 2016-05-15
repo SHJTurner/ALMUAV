@@ -13,13 +13,13 @@ using namespace std;
 int main(int argc, char** argv )
 {
     ///Print title and OpenCV version
-    printf("OpenCV Mat vs UMat FPS test\nTask: Convert to hue and preform color segmentation\nOpenCV Ver.: %d.%d\n",CV_MAJOR_VERSION,CV_MINOR_VERSION);
+    printf("OpenCV Mat vs UMat FPS test\nTask: Convert to hue and preform color segmentation\nOpenCV Ver.: %d.%d\nTest resolution: %d x %d\n",CV_MAJOR_VERSION,CV_MINOR_VERSION,Image_Width,Image_Height);
 
 #ifdef Display
-    printf("Display image: true (This will lower FPS. Comment \"#define Display\" in Mat_vs_UMat_test.cpp to disable)\n");
+    printf("Display image: true (This will lower FPS. Comment \"#define Display\" in Mat_vs_UMat_test.cpp and recompile to disable)\n");
     cv::namedWindow("Display Image", cv::WINDOW_NORMAL );
 #else
-    printf("Display image: false (Uncomment \"#define Display\" in Mat_vs_UMat_test.cpp to enable)\n");
+    printf("Display image: false (Uncomment \"#define Display\" in Mat_vs_UMat_test.cpp and recompile to enable)\n");
 #endif
 
 
@@ -50,16 +50,30 @@ int main(int argc, char** argv )
     cam.set(cv::CAP_PROP_FRAME_WIDTH,Image_Width);
     cam.set(cv::CAP_PROP_FRAME_HEIGHT,Image_Height);
 
-///Mat(CPU) fps test
-    printf("Mat(CPU) FPS test...\n");
-    cv::Mat image, imageHSV,imageRed;
-    start = clock();
-    for(uint i = 0; i < 201; i++)
+    printf("Capturering 240 images for the test...");
+    cout << std::flush;
+    //record 240 images
+    cv::Mat newimage;
+    vector<cv::Mat> images;
+    for(uint i = 0; i< 241; i++)
     {
-        if(framecounter == 50)
+        cam.grab();
+        cam.retrieve(newimage,0);
+        images.push_back(newimage);
+    }
+    printf("done\n");
+
+    ///Mat(CPU) fps test
+    printf("Mat(CPU) FPS test...\n");
+    cv::Mat imageHSV,imageRed;
+
+    start = clock();
+    for(cv::Mat image : images)
+    {
+        if(framecounter == 60)
         {
             end = clock();
-            printf("FPS: %4.2f\n",((double)1/((double(end - start)/50.0)/CLOCKS_PER_SEC)));
+            printf("Mean FPS (last 60 frames): %4.2f\n",((double)1/((double(end - start)/60.0)/CLOCKS_PER_SEC)));
             cout << std::flush;
             start = clock();
             framecounter = 0;
@@ -76,27 +90,32 @@ int main(int argc, char** argv )
         cv::waitKey(1);
 #endif
     }
+    cv::UMat newUimage;
+    vector<cv::UMat> Uimages;
+    for(cv::Mat image : images)
+    {
+        image.copyTo(newUimage);
+        Uimages.push_back(newUimage);
+    }
 
 ///UMAT(GPU) fps test
     printf("UMat(GPU) FPS test...\n");
     cv::UMat Uimage, UimageHSV,UimageRed;
     start = clock();
-    for(uint i = 0; i < 201; i++)
+    framecounter = 0;
+    for(cv::UMat Uimage : Uimages)
     {
         ///Messure time
-        if(framecounter == 50)
+        if(framecounter == 60)
         {
             end = clock();
-            printf("FPS: %4.2f\n",((double)1/((double(end - start)/50.0)/CLOCKS_PER_SEC)));
+            printf("Mean FPS (last 60 frames): %4.2f\n",((double)1/((double(end - start)/60.0)/CLOCKS_PER_SEC)));
             cout << std::flush;
             start = clock();
             framecounter = 0;
         }
         framecounter++;
 
-        ///Get image
-        cam.grab();
-        cam.retrieve(Uimage,0);
         ///Process image
         cv::cvtColor(Uimage, UimageHSV, cv::COLOR_RGB2HSV); //convert to HSV
         cv::inRange(UimageHSV, cv::Scalar(100, 0, 0), cv::Scalar(170, 255, 255), UimageRed);
